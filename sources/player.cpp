@@ -59,15 +59,26 @@ void Player::setPlaying(bool playerStatus){
 
 // size_before is from type size_t because the size of a vector is from this type
 void Player::addCardsTaken(size_t size_before, bool draw){
-    if(this->vector_player.size()!= 0 && draw){
-     throw logic_error("no player should take cards while there is a draw and there are still cards in the deck");
+    if(this->stacksize()<=1 && draw){
+         this->takenCards+=size_before;
     }
-    else if(!draw){
+    else if(this->stacksize()>1 && draw){
+        cout<<"no player should take cards while there is a draw and there are still cards in the deck";
+        return;
+    }
+    else{ // no draw
         this->takenCards+=(2*(size_before-(this->vector_player.size())));
     }
-    else if(this->stacksize()==0){ // if the cards are over and it's during a draw, split what's left between the two players (during draw)
-        this->takenCards+=size_before;
-    }
+
+    // if((this->stacksize()!= 0 && this->stacksize()!= 1)  && draw){
+    //  throw logic_error("no player should take cards while there is a draw and there are still cards in the deck");
+    // }
+    // else if(!draw){
+    //     this->takenCards+=(2*(size_before-(this->vector_player.size())));
+    // }
+    // else if(this->stacksize()<=1 && draw){ // if the cards are over and it's during a draw, split what's left between the two players (during draw)
+    //     this->takenCards+=size_before;
+    // }
 
 }
 

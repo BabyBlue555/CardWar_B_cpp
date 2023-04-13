@@ -9,6 +9,7 @@
 #include <algorithm>    // std::random_shuffle
 #include <ctime>        // std::time
 #include <cstdlib>      // std::rand, std::srand
+#include <chrono>
 //#include <algorithm>
 #include <random>
 using namespace std;
@@ -50,10 +51,6 @@ Game::Game(Player& plr1, Player& plr2)
 void Game::initializeCards(){
     //1.initialize the game card deck
      
-        //std:: vector<Card> vector_game;
-        
-        // auto rng = std::default_random_engine {};
-        // std::shuffle(std::begin(vector_game), std::end(vector_game), rng);
 
         for(unsigned long i=0;i<vector_suit.size();i++){
             for(size_t j=2;j<=10;j++){
@@ -67,18 +64,19 @@ void Game::initializeCards(){
     // 2.shuffle cards
         // using built-in random generator from algorithm and random class:
         // i got it from the  first answer - https://stackoverflow.com/questions/6926433/how-to-shuffle-a-stdvector 
-        auto rng = std::default_random_engine {};
-        std::shuffle(std::begin(vector_game), std::end(vector_game), rng);
-            // print out content:
-        int counter=0;
-      //  std::cout << "myvector contains:";
-        //for (std::vector<Card>::iterator it=vector_game.begin(); it!=vector_game.end(); ++it){
-      //  std::cout << *it <<endl;
-        // counter++;
-        //std::cout << counter<<endl;
-      //  }
-        //std::cout << counter<<endl;
-        //std::cout << '\n';
+        // auto rng = std::default_random_engine {};
+        // std::shuffle(std::begin(vector_game), std::end(vector_game), rng);
+           
+         // get a time-based seed
+         // this shuffle produces a different permutation every time
+        unsigned seed = std::chrono::system_clock::now()
+                            .time_since_epoch()
+                            .count();
+        shuffle (vector_game.begin(), vector_game.end(), std::default_random_engine(seed));
+        
+
+
+ 
     
     //3. give 26 cards to p1 and 26 cards to p2
        // std::vector<Card> vect1;  // player 1's deck
@@ -106,11 +104,6 @@ void Game::initializeCards(){
         // printf("size of vector in player: %lu", p1.getDeck().size());
         // printf("stacksize: %lu " , p1.stacksize());
 
-        // free from memory
-        // vector_game.clear();
-        // vector_suit.shrink_to_fit();
-        // vector_suit.clear();
-        // vector_game.shrink_to_fit();
 
         // cout<<"printing deck of p1!!!!!11"<<endl;
         //  for(size_t i=0;i<26;i++){
@@ -153,16 +146,6 @@ void Game::playTurn(){
 
     if(p1.isPlaying() && p2.isPlaying()&& (!p1.getDeck().empty() && !p2.getDeck().empty())){
 
-     //edge case - each player has one card left - i took care of it by 
-     // removing the if before the < , >
-
-    //  if(p1.stacksize()==1 && p2.stacksize()==1){
-
-    //  }
-     
-     
-        // remove cards from deck
-
         cout<<"remove cards from deck..."<<endl;
         Card p1_curr_card=p1.getCurrCard();
         Card p2_curr_card=p2.getCurrCard();
@@ -178,6 +161,24 @@ void Game::playTurn(){
 //Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
         this->lastTurnStats+=p1.getName()+" played "+p1_curr_card.toString()+" and "+p2.getName()+" played "+p2_curr_card.toString()+"\n";
 
+        // UPDATE -no need to check this case - i covered it in addCardsTaken function and removed
+        // a condition from the while 
+        ///edge case: there is only one card left for each player and it's a draw
+        if((p1.stacksize()==1 && p2.stacksize()==1) && (p1_curr_card==p2_curr_card)){
+            draw=1;
+            p1.addCardsTaken(size_before_p1,draw);
+            p2.addCardsTaken(size_before_p2,draw);
+            // empty the deck
+            
+            p1.popCard(p1.getDeck());
+            p2.popCard(p2.getDeck());
+            
+            //the game is over - no more cards left
+            p1.setPlaying(0);
+            p2.setPlaying(0);
+            return;
+         }
+
         //option 1 - draw 
         while(p1_curr_card==p2_curr_card){
             draw=1;
@@ -185,13 +186,16 @@ void Game::playTurn(){
             cout<<"PRINTING NUM DRAWS//////////////////////////////////";
             cout<<to_string(num_draws)<<endl;
             num_draws_in_turn++;
-            if(!p1.getDeck().empty() && !p2.getDeck().empty()){
+
+        
+            if(!p1.getDeck().empty() && !p2.getDeck().empty() ){
             // close card
-                 p1_curr_card= p1.getCurrCard();
+                p1_curr_card= p1.getCurrCard();
                 p2_curr_card=p2.getCurrCard();
                 p1.popCard(p1.getDeck());
                 p2.popCard(p2.getDeck());
-
+            
+            if(!p1.getDeck().empty() && !p2.getDeck().empty() ){
             // open card
                 p1_curr_card= p1.getCurrCard();
                 p2_curr_card=p2.getCurrCard();
@@ -199,24 +203,43 @@ void Game::playTurn(){
                 p2.popCard(p2.getDeck());
 
                 cout<<"card of p1: "<<p1_curr_card.toString()<<endl;
-        cout<<"card of p2: "<<p2_curr_card.toString()<<endl;
+                 cout<<"card of p2: "<<p2_curr_card.toString()<<endl;
  
             }
             else{
-                cout<<"stack size is empty!"<<endl;
-                p1.addCardsTaken(size_before_p1,draw);
+                 p1.addCardsTaken(size_before_p1,draw);
                 p2.addCardsTaken(size_before_p2,draw);
+                p1.setPlaying(0);
+                p2.setPlaying(0);
                 break;
             }
-        if(p1_curr_card >p2_curr_card || p1_curr_card < p2_curr_card){
-                draw=0;
+
             }
+            else{ 
+              //  cout<<"stack size is empty!"<<endl;
+            //    draw=1;
+                p1.addCardsTaken(size_before_p1,draw);
+                p2.addCardsTaken(size_before_p2,draw);
+                p1.setPlaying(0);
+                p2.setPlaying(0);
+                break;
+            }
+
+                
+            if(p1_curr_card >p2_curr_card || p1_curr_card < p2_curr_card){
+                draw=0;
+                //break;
+            }
+
+             
+            
         
         // adds the draw/s to the turn's statistics
         this->lastTurnStats+=p1.getName()+" played "+p1_curr_card.toString()+" and "+p2.getName()+" played "+p2_curr_card.toString();        
         
         } // end-of-while
 
+        
         
         // option 2- one of the players won the turn 
        // if(!p1.getDeck().empty() && !p2.getDeck().empty()){
@@ -231,8 +254,12 @@ void Game::playTurn(){
             num_wins_p2++;
             this->lastTurnStats+="the winner in the last turn is: "+p2.getName()+"the number of draws in this turn is: "+to_string(num_draws_in_turn)+ "number of cards overall: "+to_string(p2.cardesTaken());
         }
-      //  }
-     
+   
+        cout<<"p1 stacksize: "<<to_string(p1.stacksize())<<endl;
+        cout<<"p2 stacksize: "<<to_string(p2.stacksize())<<endl;
+        cout<<"p1 cardstaken: "<<to_string(p1.cardesTaken())<<endl;
+        cout<<"p2 cardstaken: "<<to_string(p2.cardesTaken())<<endl;
+
 
     }
 
@@ -249,7 +276,7 @@ void Game::playTurn(){
     this->log+=(this->lastTurnStats)+'\n';
     //  printLastTurn();
     //   printLog();
-    printStats();
+   
 };
 
 
@@ -260,7 +287,7 @@ void Game::playAll(){
     }
     p1.setPlaying(0);
     p2.setPlaying(0);
-
+    //printStats();
 };
 
 void Game::printWiner(){
