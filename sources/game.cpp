@@ -136,9 +136,9 @@ void Game::playTurn(){
    
    num_turns++;
 
-   cout<<"printing winning so far:"<<endl;
-   cout<<"P1:"<<to_string(p1.cardesTaken())<<endl;
-   cout<<"P2:"<<to_string(p2.cardesTaken())<<endl;
+//    cout<<"printing winning so far:"<<endl;
+//    cout<<"aaP1:"<<to_string(p1.cardesTaken())<<endl;
+//    cout<<"P2:"<<to_string(p2.cardesTaken())<<endl;
     
     if(&p1==&p2){
         throw logic_error("one player cannot play the game alone!");
@@ -146,23 +146,24 @@ void Game::playTurn(){
 
     if(p1.isPlaying() && p2.isPlaying()&& (!p1.getDeck().empty() && !p2.getDeck().empty())){
 
-        cout<<"remove cards from deck..."<<endl;
+      //  cout<<"remove cards from deck..."<<endl;
         Card p1_curr_card=p1.getCurrCard();
         Card p2_curr_card=p2.getCurrCard();
         p1.popCard(p1.getDeck());
         p2.popCard(p2.getDeck());
-        cout<<p1.stacksize()<<endl;
-        cout<<p2.stacksize()<<endl;
+        // cout<<p1.stacksize()<<endl;
+        // cout<<p2.stacksize()<<endl;
 
 
-        cout<<"card of p1: "<<p1_curr_card.toString()<<endl;
-        cout<<"card of p2: "<<p2_curr_card.toString()<<endl;
+        // cout<<"card of p1: "<<p1_curr_card.toString()<<endl;
+        // cout<<"card of p2: "<<p2_curr_card.toString()<<endl;
         
 //Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
         this->lastTurnStats+=p1.getName()+" played "+p1_curr_card.toString()+" and "+p2.getName()+" played "+p2_curr_card.toString()+"\n";
 
-        
-        ///edge case: there is only one card left for each player and it's a draw
+        // UPDATE -no need to check this case - i covered it in addCardsTaken function and removed
+        // a condition from the while 
+        // ///edge case: there is only one card left for each player and it's a draw
         if((p1.stacksize()==1 && p2.stacksize()==1) && (p1_curr_card==p2_curr_card)){
             draw=1;
             p1.addCardsTaken(size_before_p1,draw);
@@ -175,15 +176,15 @@ void Game::playTurn(){
             //the game is over - no more cards left
             p1.setPlaying(0);
             p2.setPlaying(0);
-            return;
+           return;
          }
 
         //option 1 - draw 
         while(p1_curr_card==p2_curr_card){
             draw=1;
             num_draws++;
-            cout<<"PRINTING NUM DRAWS//////////////////////////////////";
-            cout<<to_string(num_draws)<<endl;
+            // cout<<"PRINTING NUM DRAWS//////////////////////////////////";
+            // cout<<to_string(num_draws)<<endl;
             num_draws_in_turn++;
 
         
@@ -201,17 +202,17 @@ void Game::playTurn(){
                 p1.popCard(p1.getDeck());
                 p2.popCard(p2.getDeck());
 
-                cout<<"card of p1: "<<p1_curr_card.toString()<<endl;
-                 cout<<"card of p2: "<<p2_curr_card.toString()<<endl;
+                // cout<<"card of p1: "<<p1_curr_card.toString()<<endl;
+                //  cout<<"card of p2: "<<p2_curr_card.toString()<<endl;
  
             }
-            else{
-                 p1.addCardsTaken(size_before_p1,draw);
-                p2.addCardsTaken(size_before_p2,draw);
-                p1.setPlaying(0);
-                p2.setPlaying(0);
-                break;
-            }
+            // else{
+            //     p1.addCardsTaken(size_before_p1,draw);
+            //     p2.addCardsTaken(size_before_p2,draw);
+            //     p1.setPlaying(0);
+            //     p2.setPlaying(0);
+            //     break;
+            // }
 
             }
             else{ 
@@ -254,10 +255,10 @@ void Game::playTurn(){
             this->lastTurnStats+="the winner in the last turn is: "+p2.getName()+"the number of draws in this turn is: "+to_string(num_draws_in_turn)+ "number of cards overall: "+to_string(p2.cardesTaken());
         }
    
-        cout<<"p1 stacksize: "<<to_string(p1.stacksize())<<endl;
-        cout<<"p2 stacksize: "<<to_string(p2.stacksize())<<endl;
-        cout<<"p1 cardstaken: "<<to_string(p1.cardesTaken())<<endl;
-        cout<<"p2 cardstaken: "<<to_string(p2.cardesTaken())<<endl;
+        // cout<<"p1 stacksize: "<<to_string(p1.stacksize())<<endl;
+        // cout<<"p2 stacksize: "<<to_string(p2.stacksize())<<endl;
+        // cout<<"p1 cardstaken: "<<to_string(p1.cardesTaken())<<endl;
+        // cout<<"p2 cardstaken: "<<to_string(p2.cardesTaken())<<endl;
 
 
     }
@@ -284,8 +285,8 @@ void Game::playAll(){
     while(!p1.getDeck().empty() && !p1.getDeck().empty()) {
         this->playTurn();
     }
-    p1.setPlaying(0);
-    p2.setPlaying(0);
+    // p1.setPlaying(0);
+    // p2.setPlaying(0);
     //printStats();
 };
 
