@@ -7,12 +7,12 @@
 using namespace std;
 using namespace ariel;
 
-Card::Card(int value, std::string suit) {
+Card::Card(size_t value, std::string suit) {
     this->value = value;
     this->suit = suit;
 }
 
-int Card::getValue(){
+size_t Card::getValue(){
     return this->value;
 }
 
@@ -20,3 +20,10 @@ std::string Card::getSuit(){
     return this->suit;
 }
 
+
+
+
+// in order to display the card in stats of player
+string Card::toString(){
+    return to_string(this->value)+" of "+(this->suit)+"\n";
+}

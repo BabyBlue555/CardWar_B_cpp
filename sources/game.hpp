@@ -21,15 +21,18 @@ class Game{
         /* The cards in the game. */
         std:: vector<string> vector_suit= {"diamonds","spades","clubs","hearts"};
         vector<Card> vector_game;
+        // for stats and log
+        size_t num_wins_p1;
+        size_t num_wins_p2;
+        size_t num_draws;
+        size_t num_turns;
+        string lastTurnStats; // for lastTurnStats and log 
+        string log;// for lastTurnStats and log
+
         // vector<Card>& vector_p1;
         // vector<Card>& vector_p2;
 
-        //  /* Temploary stack of cards of player 1 */
-         //   vector<Card> p1Cards;
-
-            /* Temploary stack of cards of player 2 */
-           // vector<Card> p2Cards;
-
+       
             /* The last turn stats. */
             // string lastTurnStats;
 

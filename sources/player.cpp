@@ -11,8 +11,6 @@ using namespace ariel;
 
 Player:: Player(string str):takenCards(0){
     this->name=str;
-   // this->stackSize=26;
-    //this->takenCards=0;
     this->_isPlaying=0; // initialize to not playing
   //  this->vector_player=&vector_player;
   //  this->vector_player;
@@ -35,6 +33,10 @@ size_t Player::cardesTaken() const{
     return this->takenCards;
 }
 
+//  size_t Player::getNumWins() const{
+//     return this->num_wins;
+//  }
+
 // getter
 string Player::getName(){
     return this->name;
@@ -55,14 +57,15 @@ void Player::setPlaying(bool playerStatus){
     this->_isPlaying=playerStatus;
 }
 
-void Player::addCardsTaken(size_t& size_before, bool draw){
+// size_before is from type size_t because the size of a vector is from this type
+void Player::addCardsTaken(size_t size_before, bool draw){
     if(this->vector_player.size()!= 0 && draw){
      throw logic_error("no player should take cards while there is a draw and there are still cards in the deck");
     }
     else if(!draw){
-        this->takenCards+=2*(size_before-this->vector_player.size());
+        this->takenCards+=(2*(size_before-(this->vector_player.size())));
     }
-    else{ // if the cards are over and it's during a draw, split what's left between the two players (during draw)
+    else if(this->stacksize()==0){ // if the cards are over and it's during a draw, split what's left between the two players (during draw)
         this->takenCards+=size_before;
     }
 
@@ -81,22 +84,22 @@ void Player::addCardsTaken(size_t& size_before, bool draw){
 //          throw logic_error("no more cards in the deck!");
 //     }
 // }
-//void setInGame(bool status) { this->inGame = status; }
 
 //returns the current card the player has in the deck
 const Card& Player::getCurrCard() const{
     return this->vector_player.back();
 }
 
-const Card& Player::popCard(std::vector<Card>& player_deck) const{
-    static Card currCard=player_deck.back();
+//const Card&
+void Player::popCard(std::vector<Card>& player_deck) const{
+  //  const Card currCard=player_deck.back();
     if(!player_deck.empty()){
        // player_deck.erase(player_deck.begin());
        player_deck.pop_back();
     }
     // printf("entering pop...........");
     // printf("stacksize after pop: %lu", this->stacksize());
-    return currCard;
+    //return currCard;
 
 }
 
