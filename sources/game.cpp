@@ -161,8 +161,7 @@ void Game::playTurn(){
 //Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
         this->lastTurnStats+=p1.getName()+" played "+p1_curr_card.toString()+" and "+p2.getName()+" played "+p2_curr_card.toString()+"\n";
 
-        // UPDATE -no need to check this case - i covered it in addCardsTaken function and removed
-        // a condition from the while 
+        
         ///edge case: there is only one card left for each player and it's a draw
         if((p1.stacksize()==1 && p2.stacksize()==1) && (p1_curr_card==p2_curr_card)){
             draw=1;
