@@ -164,20 +164,20 @@ void Game::playTurn(){
         // UPDATE -no need to check this case - i covered it in addCardsTaken function and removed
         // a condition from the while 
         // ///edge case: there is only one card left for each player and it's a draw
-        if((p1.stacksize()==1 && p2.stacksize()==1) && (p1_curr_card==p2_curr_card)){
-            draw=1;
-            p1.addCardsTaken(size_before_p1,draw);
-            p2.addCardsTaken(size_before_p2,draw);
-            // empty the deck
+        // if((p1.stacksize()==1 && p2.stacksize()==1) && (p1_curr_card==p2_curr_card)){
+        //     draw=1;
+        //     p1.addCardsTaken(size_before_p1,draw);
+        //     p2.addCardsTaken(size_before_p2,draw);
+        //     // empty the deck
             
-            p1.popCard(p1.getDeck());
-            p2.popCard(p2.getDeck());
+        //     p1.popCard(p1.getDeck());
+        //     p2.popCard(p2.getDeck());
             
-            //the game is over - no more cards left
-            p1.setPlaying(0);
-            p2.setPlaying(0);
-           return;
-         }
+        //     //the game is over - no more cards left
+        //     p1.setPlaying(0);
+        //     p2.setPlaying(0);
+        //    return;
+        //  }
 
         //option 1 - draw 
         while(p1_curr_card==p2_curr_card){
